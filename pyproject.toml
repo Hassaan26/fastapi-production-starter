@@ -1,0 +1,61 @@
+[project]
+name = "fastapi-production-starter"
+version = "0.1.0"
+description = "A small task-management API demonstrating secure, testable FastAPI backend fundamentals."
+authors = [
+    { name = "Hassaan", email = "hassaan26@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.20.0",
+    "asyncpg>=0.32.0",
+    "fastapi[standard]>=0.143.1",
+    "pwdlib[argon2]>=0.3.1",
+    "pydantic-settings>=2.16.0",
+    "pyjwt>=2.15.1",
+    "redis>=8.1.0",
+    "sqlalchemy[asyncio]>=2.1.4",
+    "structlog>=26.1.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "app"
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "S", "ASYNC", "SIM", "RUF", "N"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests use bare asserts and hard-coded fake credentials by design.
+"tests/**" = ["S101", "S105", "S106"]
+# Assertions narrow the exception type inside handlers registered per type.
+"src/app/core/errors.py" = ["S101"]
+
+[tool.mypy]
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+
+[dependency-groups]
+dev = [
+    "fakeredis>=2.40.0",
+    "mypy>=2.4.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "python-dotenv>=1.2.4",
+    "ruff>=0.17.0",
+]
